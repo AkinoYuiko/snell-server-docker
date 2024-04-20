@@ -16,7 +16,7 @@ run() {
     echo "Generating new config..."
     cat << EOF > ${CONF}
 [snell-server]
-listen = 0.0.0.0:${PORT}
+listen = :::${PORT}
 psk = ${PSK}
 ipv6 = ${IPV6}
 EOF
