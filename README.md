@@ -14,7 +14,7 @@ This image supports `linux/amd64`, `linux/arm64`, `linux/arm/v7` and `linux/386`
 
 ## Docker Pull
 
-`docker pull funnyzak/snell-server:latest`
+`docker pull angribot/snell-server:latest`
 
 ## Docker Run
 
@@ -22,15 +22,12 @@ Your can run this image with the following command:
 
 ```bash
 # One line command
-docker run -d --name snell-server --restart always -p 12303:6180 -e PSK="5G0H4qdf32mEZx32t" funnyzak/snell-server
+docker run -d --name snell-server --restart always -p 12303:6250 -e PSK="5G0H4qdf32mEZx32t" angribot/snell-server
 
 # Or with environment variables
 docker run -d --name snell-server --restart always \
   -e PSK="5G0H4qdf32mEZx32t" \
-  -e TZ="Asia/Shanghai" \
-  -e IPV6="false" \
-  -e PORT=6180 \
-  -p 12303:6180 funnyzak/snell-server:latest
+  -p 12303:6250 angribot/snell-server:latest
 
 # Echo config file
 docker exec -it snell-server cat /app/snell-server.conf
@@ -47,7 +44,7 @@ services:
       PSK: 5G0H4qdf32mEZx32t
     restart: always
     ports:
-      - 12303:6250
+      - 12345:6250
 ```
 
 ## Reference
