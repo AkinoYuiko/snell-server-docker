@@ -39,19 +39,15 @@ docker exec -it snell-server cat /app/snell-server.conf
 Or you can use docker-compose to run this image:
 
 ```yaml
-version: '3'
 services:
   snell:
-    image: funnyzak/snell-server
+    image: angribot/snell-server
     container_name: snell-server
     environment:
       PSK: 5G0H4qdf32mEZx32t
-      TZ: Asia/Shanghai
-      IPV6: false
-      PORT: 6180
     restart: always
     ports:
-      - 12303:6180
+      - 12303:6250
 ```
 
 ## Reference
