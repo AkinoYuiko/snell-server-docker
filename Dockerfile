@@ -25,8 +25,8 @@ RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi && \
     chmod +x entrypoint.sh
 
 ENV LANG=C.UTF-8
-ENV TZ=Asia/Shanghai
-ENV PORT=6180
+ENV TZ=Asia/Hongkong
+ENV PORT=6250
 ENV IPV6=false
 ENV PSK=
 
