@@ -1,14 +1,15 @@
-FROM --platform=$BUILDPLATFORM debian:sid-slim
+# FROM --platform=$BUILDPLATFORM debian:sid-slim
+FROM frolvlad/alpine-glibc
 
 ARG TARGETPLATFORM
-ARG BUILDPLATFORM
 ARG SNELL_SERVER_VERSION=4.0.1
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget unzip && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends wget unzip && \
+#     rm -rf /var/lib/apt/lists/*
+RUN apk add wget unzip
 
-WORKDIR /app/
+WORKDIR /usr/local/bin/
 
 RUN case "${TARGETPLATFORM}" in \
     "linux/amd64") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-amd64.zip" ;; \
@@ -18,7 +19,7 @@ RUN case "${TARGETPLATFORM}" in \
     *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
     esac
 
-COPY entrypoint.sh /app/
+COPY entrypoint.sh /usr/local/bin/
 
 RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi && \
     chmod +x snell-server && \
@@ -32,4 +33,4 @@ ENV PSK=
 
 LABEL version="${SNELL_SERVER_VERSION}"
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
