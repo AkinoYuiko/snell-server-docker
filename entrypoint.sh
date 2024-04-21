@@ -1,7 +1,6 @@
 #!/bin/bash
-
-BIN="/usr/local/bin/snell-server"
-CONF="/usr/local/bin/snell-server.conf"
+BIN="/app/snell-server"
+CONF="/app/snell-server.conf"
 
 run() {
   if [ ! -f ${CONF} ]; then

@@ -1,15 +1,20 @@
-# FROM --platform=$BUILDPLATFORM debian:sid-slim
-FROM frolvlad/alpine-glibc
+FROM alpine
 
 ARG TARGETPLATFORM
 ARG SNELL_SERVER_VERSION=4.0.1
 
-# RUN apt-get update && \
-#     apt-get install -y --no-install-recommends wget unzip && \
-#     rm -rf /var/lib/apt/lists/*
-RUN apk add wget unzip
+RUN apk add --no-cache wget unzip 
+RUN echo 'https://storage.sev.monster/alpine/edge/testing' | tee -a /etc/apk/repositories
+RUN wget https://storage.sev.monster/alpine/edge/testing/x86_64/sevmonster-keys-1-r0.apk
+RUN apk add --allow-untrusted ./sevmonster-keys-1-r0.apk
+RUN apk update
+RUN apk add --no-cache gcompat libstdc++
+RUN rm /lib/ld-linux-x86-64.so.2
+RUN apk add --no-cache --force-overwrite glibc
+RUN apk add --no-cache glibc-bin
+RUN rm ./sevmonster-keys-1-r0.apk 
 
-WORKDIR /usr/local/bin/
+WORKDIR /app/
 
 RUN case "${TARGETPLATFORM}" in \
     "linux/amd64") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-amd64.zip" ;; \
@@ -19,7 +24,7 @@ RUN case "${TARGETPLATFORM}" in \
     *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
     esac
 
-COPY entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh /app/
 
 RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi && \
     chmod +x snell-server && \
@@ -33,4 +38,4 @@ ENV PSK=
 
 LABEL version="${SNELL_SERVER_VERSION}"
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
