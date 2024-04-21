@@ -14,7 +14,7 @@ This image supports `linux/amd64`, `linux/arm64`, `linux/arm/v7` and `linux/386`
 
 ## Docker Pull
 
-`docker pull angribot/snell-server:latest`
+`docker pull angribot/snell:latest`
 
 ## Docker Run
 
@@ -22,15 +22,15 @@ Your can run this image with the following command:
 
 ```bash
 # One line command
-docker run -d --name snell-server --restart always -p 12303:6250 -e PSK="5G0H4qdf32mEZx32t" angribot/snell-server
+docker run -d --name snell --restart always -p 12303:6250 -e PSK="5G0H4qdf32mEZx32t" angribot/snell
 
 # Or with environment variables
-docker run -d --name snell-server --restart always \
+docker run -d --name snell --restart always \
   -e PSK="5G0H4qdf32mEZx32t" \
-  -p 12303:6250 angribot/snell-server:latest
+  -p 12303:6250 angribot/snell:latest
 
 # Echo config file
-docker exec -it snell-server cat /app/snell-server.conf
+docker exec -it snell cat /app/snell-server.conf
 ```
 
 Or you can use docker-compose to run this image:
@@ -38,8 +38,8 @@ Or you can use docker-compose to run this image:
 ```yaml
 services:
   snell:
-    image: angribot/snell-server
-    container_name: snell-server
+    image: angribot/snell
+    container_name: snell
     environment:
       PSK: 5G0H4qdf32mEZx32t
     restart: always
