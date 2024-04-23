@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} debian:stable-slim AS builder
+FROM --platform=${BUILDPLATFORM} debian AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -11,8 +11,8 @@ RUN apt-get update &&\
 WORKDIR /app/
 
 COPY download.sh .
-RUN echo 'nameserver 1.1.1.1' > /etc/resolv.conf
-RUN bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
+RUN echo "nameserver 1.1.1.1" > /etc/resolv.conf &&\
+    bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
 
 FROM --platform=${TARGETPLATFORM} debian:stable-slim AS exec
 
