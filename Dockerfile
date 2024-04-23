@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM debian:sid-slim AS builder
+FROM --platform=${BUILDPLATFORM} debian:sid-slim AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -20,8 +20,13 @@ RUN case "${TARGETPLATFORM}" in \
 
 RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
 
-FROM --platform=$TARGETPLATFORM debian:sid-slim AS prd
+FROM --platform=${TARGETPLATFORM} debian:sid-slim AS prd
+
+ARG TARGETPLATFORM
+ARG SNELL_SERVER_VERSION=4.0.1
+
 WORKDIR /app/
+
 COPY --from=builder /app/snell-server .
 COPY entrypoint.sh .
 
