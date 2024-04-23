@@ -1,18 +1,16 @@
-FROM --platform=${BUILDPLATFORM} debian AS builder
+FROM --platform=${BUILDPLATFORM} alpine AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 ARG SNELL_SERVER_VERSION=4.0.1
 
-RUN apt-get update &&\
-    apt-get install -y --no-install-recommends wget unzip &&\
-    rm -rf /var/lib/apt/lists/*
+
+RUN apk add wget unzip bash
 
 WORKDIR /app/
 
 COPY download.sh .
-RUN echo "nameserver 1.1.1.1" > /etc/resolv.conf &&\
-    bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
+RUN bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
 
 FROM --platform=${TARGETPLATFORM} debian:stable-slim AS exec
 
