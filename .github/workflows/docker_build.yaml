@@ -1,10 +1,10 @@
 name: Publish Docker image
 on:
   workflow_dispatch:
-    inputs:
-      snell_server_version:
-        description: 'snell server version, eg: 4.0.1'
-        required: true
+#    inputs:
+#      snell_server_version:
+#        description: 'snell server version, eg: 4.0.1'
+#        required: true
   push:
     tags:
       - "*"
@@ -46,7 +46,7 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-            linux/arm/v7
-            linux/i386
+            # linux/arm/v7
+            # linux/i386
           cache-from: type=gha
           cache-to: type=gha,mode=max
