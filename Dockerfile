@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM debian:sid-slim
+FROM --platform=$BUILDPLATFORM debian:sid-slim AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -18,10 +18,14 @@ RUN case "${TARGETPLATFORM}" in \
     *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
     esac
 
-COPY entrypoint.sh /app/
+RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
 
-RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi && \
-    chmod +x snell-server && \
+FROM --platform=$TARGETPLATFORM debian:sid-slim AS prd
+
+COPY --from=builder snell-server .
+COPY entrypoint.sh .
+
+RUN chmod +x snell-server && \
     chmod +x entrypoint.sh
 
 ENV LANG=C.UTF-8
