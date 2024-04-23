@@ -2,15 +2,14 @@ FROM --platform=${BUILDPLATFORM} alpine AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-ARG SNELL_SERVER_VERSION=4.0.1
-
+ARG SNELL_SERVER_VERSION="4.0.1"
 
 RUN apk add wget unzip bash
 
 WORKDIR /app/
 
 COPY download.sh .
-RUN bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
+RUN bash ./download.sh ${TARGETPLATFORM}
 
 FROM --platform=${TARGETPLATFORM} debian:stable-slim AS exec
 
