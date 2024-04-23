@@ -13,9 +13,6 @@ RUN bash ./download.sh ${TARGETPLATFORM}
 
 FROM --platform=${TARGETPLATFORM} alpine AS exec
 
-ARG TARGETPLATFORM
-ARG SNELL_SERVER_VERSION=4.0.1
-
 WORKDIR /app/
 
 COPY --from=builder /app/snell-server .
@@ -25,6 +22,7 @@ COPY entrypoint.sh .
 RUN apk add --no-cache gcompat libstdc++ &&\
     rm /lib/ld-linux-x86-64.so.2 &&\
     apk add --no-cache --allow-untrusted --force-overwrite glibc-2.39-r1.apk glibc-bin-2.39-r1.apk &&\
+    rm *.apk &&\
     chmod +x snell-server &&\
     chmod +x entrypoint.sh
 
