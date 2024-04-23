@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} debian:sid-slim AS builder
+FROM --platform=${BUILDPLATFORM} debian:stable-slim AS builder
 
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -16,11 +16,10 @@ RUN case "${TARGETPLATFORM}" in \
     "linux/arm/v7") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-armv7l.zip" ;; \
     "linux/386") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-i386.zip" ;; \
     *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
-    esac
+    esac && \
+    if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
 
-RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
-
-FROM --platform=${TARGETPLATFORM} debian:sid-slim AS prd
+FROM --platform=${TARGETPLATFORM} debian:stable-slim AS exec
 
 ARG TARGETPLATFORM
 ARG SNELL_SERVER_VERSION=4.0.1
