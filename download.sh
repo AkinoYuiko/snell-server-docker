@@ -11,3 +11,8 @@ case "$1" in
     wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v$2-linux-i386.zip" ;;
   *) echo "unsupported platform: $1"; exit 1 ;; 
   esac
+
+if [[ -f "snell.zip" ]]; then
+  unzip snell.zip
+  rm snell.zip
+fi

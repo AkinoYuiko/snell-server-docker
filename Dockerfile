@@ -11,8 +11,7 @@ RUN apt-get update &&\
 WORKDIR /app/
 
 COPY download.sh .
-RUN bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION} &&\
-    if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
+RUN bash ./download.sh ${TARGETPLATFORM} ${SNELL_SERVER_VERSION}
 
 FROM --platform=${TARGETPLATFORM} debian:stable-slim AS exec
 
