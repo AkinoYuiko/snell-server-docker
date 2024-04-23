@@ -1,46 +1,32 @@
-# syntax=docker/dockerfile:1
+FROM --platform=${BUILDPLATFORM} alpine AS builder
 
-FROM --platform=$BUILDPLATFORM alpine AS builder
-WORKDIR /app
-
+ARG TARGETPLATFORM
 ARG BUILDPLATFORM
+ARG SNELL_SERVER_VERSION="4.0.1"
+
+RUN apk add wget unzip bash
+
+WORKDIR /app/
+
+COPY download.sh .
+RUN bash ./download.sh ${TARGETPLATFORM}
+
+FROM --platform=${TARGETPLATFORM} alpine AS exec
+
 ARG TARGETPLATFORM
 ARG SNELL_SERVER_VERSION=4.0.1
 
-RUN case "${TARGETPLATFORM}" in \
-    "linux/amd64") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-amd64.zip" ;; \
-    "linux/arm64") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-aarch64.zip" ;; \
-    "linux/arm/v7") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-armv7l.zip" ;; \
-    "linux/386") wget --no-check-certificate -O snell.zip "https://dl.nssurge.com/snell/snell-server-v${SNELL_SERVER_VERSION}-linux-i386.zip" ;; \
-    *) echo "unsupported platform: ${TARGETPLATFORM}"; exit 1 ;; \
-    esac
-
-RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
-
-FROM --platform=$TARGETPLATFORM alpine AS prod
-ARG TARGETPLATFORM
-
-WORKDIR /app
+WORKDIR /app/
 
 COPY --from=builder /app/snell-server .
-COPY glibc*.apk .
+COPY *.apk .
 COPY entrypoint.sh .
 
-RUN apk add --no-cache gcompat libstdc++ && \
-    rm /lib/ld-linux-x86-64.so.2 && \
-    apk add --no-cache --allow-untrusted --force-overwrite glibc-2.39-r1.apk glibc-bin-2.39-r1.apk && \
-    rm ./*.apk && \
-    chmod +x snell-server && \
+RUN apk add --no-cache gcompat libstdc++ &&\
+    rm /lib/ld-linux-x86-64.so.2 &&\
+    apk add --no-cache --allow-untrusted --force-overwrite glibc-2.39-r1.apk glibc-bin-2.39-r1.apk &&\
+    chmod +x snell-server &&\
     chmod +x entrypoint.sh
-
-# RUN echo 'https://storage.sev.monster/alpine/edge/testing' >> /etc/apk/repositories && \
-#     wget https://storage.sev.monster/alpine/edge/testing/x86_64/sevmonster-keys-1-r0.apk && \
-#     apk add --allow-untrusted ./sevmonster-keys-1-r0.apk && \
-#     apk update && \
-#     apk add --no-cache gcompat libstdc++ && \
-#     rm /lib/ld-linux-x86-64.so.2 && \
-#     apk add --no-cache --force-overwrite glibc glibc-bin && \
-#     rm ./sevmonster-keys-1-r0.apk
 
 ENV LANG=C.UTF-8
 ENV TZ=Asia/Hongkong
@@ -48,6 +34,6 @@ ENV PORT=6250
 ENV IPV6=false
 ENV PSK=
 
-# LABEL version="${SNELL_SERVER_VERSION}"
+LABEL version="${SNELL_SERVER_VERSION}"
 
 ENTRYPOINT ["/app/entrypoint.sh"]
