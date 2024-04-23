@@ -21,8 +21,8 @@ RUN case "${TARGETPLATFORM}" in \
 RUN if [ -f snell.zip ]; then unzip snell.zip && rm -f snell.zip; fi
 
 FROM --platform=$TARGETPLATFORM debian:sid-slim AS prd
-
-COPY --from=builder snell-server .
+WORKDIR /app/
+COPY --from=builder /app/snell-server .
 COPY entrypoint.sh .
 
 RUN chmod +x snell-server && \
