@@ -12,9 +12,9 @@ COPY download.sh .
 RUN bash ./download.sh ${TARGETPLATFORM}
 
 FROM --platform=${TARGETPLATFORM} angribot/glibc-alpine AS snell-server
-COPY --from=builder /root/snell-server /usr/bin/
-COPY entrypoint.sh /usr/bin/
 ENV PORT=6250 \
     IPV6=false \
     PSK=
-ENTRYPOINT ["entrypoint.sh"]
+COPY --from=builder /root/snell-server /usr/bin/
+COPY entrypoint.sh /root/
+ENTRYPOINT ["/sbin/tini","--","/root/entrypoint.sh"]
