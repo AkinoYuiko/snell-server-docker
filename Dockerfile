@@ -18,6 +18,7 @@ ARG SNELL_SERVER_VERSION=4.0.1
 
 WORKDIR /app/
 
+COPY --from=builder /app/tini .
 COPY --from=builder /app/snell-server .
 COPY entrypoint.sh .
 
@@ -32,4 +33,4 @@ ENV PSK=
 
 LABEL version="${SNELL_SERVER_VERSION}"
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]
