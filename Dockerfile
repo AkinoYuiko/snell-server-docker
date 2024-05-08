@@ -22,7 +22,8 @@ COPY --from=builder /app/tini .
 COPY --from=builder /app/snell-server .
 COPY entrypoint.sh .
 
-RUN chmod +x snell-server &&\
+RUN chmod +x tini &&\
+    chmod +x snell-server &&\
     chmod +x entrypoint.sh
 
 ENV LANG=C.UTF-8
@@ -33,4 +34,4 @@ ENV PSK=
 
 LABEL version="${SNELL_SERVER_VERSION}"
 
-ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/tini", "--", "/app/entrypoint.sh"]
