@@ -41,4 +41,3 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}
           platforms: |
             linux/amd64
-            linux/arm64
