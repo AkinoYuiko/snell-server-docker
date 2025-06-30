@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  IMAGE_REPOSITORY: angribot/snell
+  IMAGE_REPOSITORY: angribot/snell:beta
 
 jobs:
   main:
@@ -41,3 +41,4 @@ jobs:
             ${{ env.IMAGE_REPOSITORY }}
           platforms: |
             linux/amd64
+            linux/arm64
