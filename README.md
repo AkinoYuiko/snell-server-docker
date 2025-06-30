@@ -1,58 +1,37 @@
-# Snell Server
+# 部署指南
+>使用前请确保你的docker已经正确运行，如果没有安装可使用这个两个命令安装：
+>```shell
+>apt update && apt upgrade -y && apt install curl -y
+>curl -fsSL 'get.docker.com' | bash
+>```
+>执行`docker -v`输出版本号就是安装好了。
 
-[![Build Status](https://github.com/AkinoYuiko/snell-server-docker/actions/workflows/docker_build.yaml/badge.svg)](https://github.com/AkinoYuiko/snell-server-docker/actions)
-[![Image Size](https://img.shields.io/docker/image-size/angribot/snell)](https://hub.docker.com/r/angribot/snell/)
-[![Docker Stars](https://img.shields.io/docker/stars/angribot/snell.svg?style=flat-square)](https://hub.docker.com/r/angribot/snell/)
-[![Docker Pulls](https://img.shields.io/docker/pulls/angribot/snell.svg?style=flat-square)](https://hub.docker.com/r/angribot/snell/)
-[![Docker Tags](https://img.shields.io/docker/v/angribot/snell?sort=semver&style=flat-square)](https://hub.docker.com/r/angribot/snell/)
-
-A minimal Snell Server docker image. If you want to use **Snell Client**, please download from [NSSurge](https://nssurge.com/).
-
-This image supports `linux/amd64` and `linux/arm64` architecture.
-
-> The latest surge-server version is v4, which is not compatible with the previous versions like before. Please upgrade both the client (Surge iOS & Surge Mac) and the server binary.
-
-**Notice**: obfs is NOT supported!
-
-## Docker Pull
-
-`docker pull angribot/snell:latest`
-
-## Docker Run
-
-Your can run this image with the following command:
-
-```bash
-# One line command
-docker run -d --name snell --restart always -p 12303:6250 -e PSK="5G0H4qdf32mEZx32t" angribot/snell
-
-# Or with environment variables
-docker run -d --name snell --restart always \
-  -e PSK="5G0H4qdf32mEZx32t" \
-  -p 12303:6250 angribot/snell:latest
-
-# Echo config file
-docker exec -it snell cat /root/snell-server.conf
+### 1. 支持的environment：  
+  - PORT=自定义使用的端口，仅`host`模式下生效，不写则随机。
+  - PSK=节点密码，不写则随机。
+  - IPV6=true/false，不写默认为false。
+  - DNS=8.8.8.8,1.1.1.1，不写为系统默认
+  - VERSION=v4.1.1，自定义二进制文件版本，不写则默认最新版
+  - OBFS=http,默认为空,写此条必须配置HOST
+  - HOST=icloud.com,默认为空
+### 2. 使用docker方式：
+```shell
+docker run -d --name snell-server --network host -e PORT=1111 -e PSK=your_password -e IVP6=false/true vocrx/snell-server:latest
 ```
-
-Or you can use docker-compose to run this image:
-
+### 3. 使用docker compose方式：
 ```yaml
 services:
-  snell:
-    image: angribot/snell
-    container_name: snell
-    environment:
-      PSK: 5G0H4qdf32mEZx32t
+  snell-server:
+    image: vocrx/snell-server:latest
+    container_name: snell-server
     restart: always
-    ports:
-      - 12345:6250
+    network_mode: host
+    environment:
+      - PORT=1111
+      - PSK=your_password
+      - IPV6=false/true
 ```
-
-## Reference
-
-- [Snell Server](https://manual.nssurge.com/others/snell.html)
-
-## License
-
-[MIT](LICENSE)
+### 4. 其他
+- 使用随机密码或者端口可以使用`docker logs snell-server`查看配置信息。
+- Docker非HOST模式下使用IPV6需要额外配置，详情GPT
+- 想好再写，反正也没人看。
