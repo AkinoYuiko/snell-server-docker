@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+SNELL_DEFAULT_VERSION="v4.1.1"
 
 random_port() {
   shuf -i 1024-65535 -n 1
@@ -32,7 +33,7 @@ EOF
 }
 
 download_snell() {
-  VERSION=${VERSION:-v4.1.1}
+  VERSION=${VERSION:-$(SNELL_DEFAULT_VERSION)}
   case "${TARGETPLATFORM}" in
     "linux/amd64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-amd64.zip" ;;
     "linux/386") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-i386.zip" ;;
