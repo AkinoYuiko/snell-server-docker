@@ -6,7 +6,7 @@ on:
       - "*"
 
 env:
-  IMAGE_REPOSITORY: angribot/snell
+  IMAGE_REPOSITORY: angribot/snell:beta
 
 jobs:
   main:
