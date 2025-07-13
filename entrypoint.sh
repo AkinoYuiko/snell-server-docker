@@ -22,7 +22,7 @@ psk=$PSK
 ipv6=$IPV6
 EOF
 
-  declare -A config_map=([DNS]="dns" [OBFS]="obfs" [HOST]="obfs-host")
+  declare -A config_map=([DNS]="dns" [OBFS]="obfs" [HOST]="obfs-host" [EGRESS]="egress-interface")
 
   for key in "${!config_map[@]}"; do
     if [ -n "${!key}" ]; then
@@ -32,7 +32,7 @@ EOF
 }
 
 download_snell() {
-  VERSION=${VERSION:-v4.1.1}
+  VERSION=${VERSION:-v5.0.0}
   case "${TARGETPLATFORM}" in
     "linux/amd64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-amd64.zip" ;;
     "linux/386") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-i386.zip" ;;
