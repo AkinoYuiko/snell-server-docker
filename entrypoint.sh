@@ -22,7 +22,7 @@ psk=$PSK
 ipv6=$IPV6
 EOF
 
-  declare -A config_map=([DNS]="dns" [OBFS]="obfs" [HOST]="obfs-host" [EGRESS]="egress-interface")
+  declare -A config_map=([DNS]="dns" [OBFS]="obfs" [EGRESS]="egress-interface")
 
   for key in "${!config_map[@]}"; do
     if [ -n "${!key}" ]; then
