@@ -13,16 +13,14 @@ generate_config() {
 
   PORT=${PORT:-$(random_port)}
   PSK=${PSK:-$(random_psk)}
-  IPV6=${IPV6:-false}
 
   cat >/snell/snell.conf <<EOF
 [snell-server]
-listen=:::$PORT
+listen= 0.0.0.0:$PORT, [::]:$PORT
 psk=$PSK
-ipv6=$IPV6
 EOF
 
-  declare -A config_map=([DNS]="dns" [OBFS]="obfs" [EGRESS]="egress-interface")
+  declare -A config_map=([DNS]="dns" [DNSIP]="dns-ip-preference" [EGRESS]="egress-interface")
 
   for key in "${!config_map[@]}"; do
     if [ -n "${!key}" ]; then
@@ -32,12 +30,11 @@ EOF
 }
 
 download_snell() {
-  VERSION=${VERSION:-v5.0.1}
+  VERSION=${VERSION:-v6.0.0b2}
   case "${TARGETPLATFORM}" in
     "linux/amd64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-amd64.zip" ;;
     "linux/386") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-i386.zip" ;;
     "linux/arm64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-aarch64.zip" ;;
-    "linux/arm/v7") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-armv7l.zip" ;;
     *) echo "不支持的平台: ${TARGETPLATFORM}" && exit 1 ;;
     esac
 
@@ -53,6 +50,5 @@ echo "PORT:$PORT"
 echo "PSK:$PSK"
 echo "VERSION:$VERSION"
 [ -n "$DNS" ] && echo "DNS:$DNS"
-[ -n "$OBFS" ] && echo "OBFS:$OBFS"
-[ -n "$HOST" ] && echo "HOST:$HOST"
+[ -n "$DNSIP" ] && echo "DNSIP:$DNSIP"
 exec /snell/snell-server -c /snell/snell.conf -l ${LOG:-notify}
