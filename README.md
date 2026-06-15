@@ -11,9 +11,9 @@
   - PSK=节点密码，不写则随机。
   - IPV6=true/false，不写默认为false。
   - DNS=8.8.8.8,1.1.1.1，不写为系统默认
-  - VERSION=v4.1.1，自定义二进制文件版本，不写则默认最新版
-  - OBFS=http,默认为空,写此条必须配置HOST
-  - HOST=icloud.com,默认为空
+  - DNSIP=IP模式，不写为系统默认
+  - VERSION=v6.0.0b3，自定义二进制文件版本，不写则默认最新版
+  - MODE=加密方式，不写为系统默认
 ### 2. 使用docker方式：
 ```shell
 docker run -d --name snell --network host -e PORT=1111 -e PSK=your_password -e IVP6=false/true angribot/snell
@@ -29,7 +29,6 @@ services:
     environment:
       - PORT=1111
       - PSK=your_password
-      - IPV6=false/true
 ```
 ### 4. 其他
 - 使用随机密码或者端口可以使用`docker logs snell`查看配置信息。
