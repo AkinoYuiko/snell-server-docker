@@ -16,7 +16,7 @@
   - MODE=加密方式，不写为系统默认
 ### 2. 使用docker方式：
 ```shell
-docker run -d --name snell --network host -e PORT=1111 -e PSK=your_password -e IVP6=false/true angribot/snell
+docker run -d --name snell --network host -e PORT=1111 -e PSK=your_password angribot/snell:latest
 ```
 ### 3. 使用docker compose方式：
 ```yaml
