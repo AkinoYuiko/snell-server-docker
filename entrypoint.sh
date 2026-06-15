@@ -20,7 +20,7 @@ listen= 0.0.0.0:$PORT, [::]:$PORT
 psk=$PSK
 EOF
 
-  declare -A config_map=([DNS]="dns" [DNSIP]="dns-ip-preference" [EGRESS]="egress-interface")
+  declare -A config_map=([DNS]="dns" [DNSIP]="dns-ip-preference" [MODE]="mode" [EGRESS]="egress-interface")
 
   for key in "${!config_map[@]}"; do
     if [ -n "${!key}" ]; then
@@ -30,7 +30,7 @@ EOF
 }
 
 download_snell() {
-  VERSION=${VERSION:-v6.0.0b2}
+  VERSION=${VERSION:-v6.0.0b3}
   case "${TARGETPLATFORM}" in
     "linux/amd64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-amd64.zip" ;;
     "linux/386") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-i386.zip" ;;
@@ -51,4 +51,5 @@ echo "PSK:$PSK"
 echo "VERSION:$VERSION"
 [ -n "$DNS" ] && echo "DNS:$DNS"
 [ -n "$DNSIP" ] && echo "DNSIP:$DNSIP"
+[ -n "$MODE" ] && echo "MODE:$MODE"
 exec /snell/snell-server -c /snell/snell.conf -l ${LOG:-notify}
