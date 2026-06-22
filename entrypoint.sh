@@ -30,7 +30,7 @@ EOF
 }
 
 download_snell() {
-  VERSION=${VERSION:-v6.0.0b3}
+  VERSION=${VERSION:-v6.0.0b4}
   case "${TARGETPLATFORM}" in
     "linux/amd64") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-amd64.zip" ;;
     "linux/386") SNELL_URL="https://dl.nssurge.com/snell/snell-server-${VERSION}-linux-i386.zip" ;;
