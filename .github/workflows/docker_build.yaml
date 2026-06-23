@@ -31,14 +31,26 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set Docker tags
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            {
+              echo "DOCKER_TAGS<<EOF"
+              echo "${IMAGE_REPOSITORY}:${GITHUB_REF_NAME}"
+              echo "${IMAGE_REPOSITORY}:latest"
+              echo "EOF"
+            } >> "$GITHUB_ENV"
+          else
+            echo "DOCKER_TAGS=${IMAGE_REPOSITORY}:latest" >> "$GITHUB_ENV"
+          fi
+
       - name: Docker build and push
         uses: docker/build-push-action@v5
         with:
           build-args: |
             BUILD_DATE=${{ env.BUILD_DATE }}
           push: true
-          tags: |
-            ${{ env.IMAGE_REPOSITORY }}
+          tags: ${{ env.DOCKER_TAGS }}
           platforms: |
             linux/amd64
             linux/arm64
