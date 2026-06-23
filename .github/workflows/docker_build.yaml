@@ -34,10 +34,21 @@ jobs:
       - name: Set Docker tags
         run: |
           if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            tag_commit="$(git rev-parse HEAD)"
+            default_branch="${{ github.event.repository.default_branch }}"
+            default_head="$(git ls-remote origin "refs/heads/${default_branch}" | awk '{print $1}')"
+
+            if [ -z "${default_head}" ]; then
+              echo "Failed to resolve HEAD for ${default_branch}" >&2
+              exit 1
+            fi
+
             {
               echo "DOCKER_TAGS<<EOF"
               echo "${IMAGE_REPOSITORY}:${GITHUB_REF_NAME}"
-              echo "${IMAGE_REPOSITORY}:latest"
+              if [ "${tag_commit}" = "${default_head}" ]; then
+                echo "${IMAGE_REPOSITORY}:latest"
+              fi
               echo "EOF"
             } >> "$GITHUB_ENV"
           else
