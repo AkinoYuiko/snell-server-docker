@@ -1,4 +1,5 @@
 name: Publish Docker image
+run-name: ${{ github.ref_type == 'tag' && format('Snell Server Docker {0}', github.ref_name) || github.workflow }}
 on:
   workflow_dispatch:
   push:
