@@ -7,8 +7,7 @@ ENV TARGETPLATFORM=${TARGETPLATFORM:-linux/amd64}
 COPY entrypoint.sh /snell/
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y wget unzip tini && \
+    apt-get install -y --no-install-recommends wget unzip tini && \
     chmod +x /snell/entrypoint.sh && \
     rm -rf /var/lib/apt/lists/*
 
